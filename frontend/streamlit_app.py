@@ -18,9 +18,10 @@ with st.form(key = "user_data"):
 
     submit = st.form_submit_button(label = "Submit")
 
+import os
+
 if submit:
-    response = requests.post(
-        "http://api:8000/predict",
-        json=payload
-    )
+    API_URL = os.getenv("API_URL", "http://api:8000")
+
+    response = requests.post(f"{API_URL}/predict", json=payload)
     st.success(response.json())

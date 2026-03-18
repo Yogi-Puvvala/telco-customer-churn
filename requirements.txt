@@ -8,3 +8,4 @@ fastapi
 uvicorn
 dvc
 streamlit
+imbalanced-learn
