@@ -20,7 +20,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: api/Dockerfile
+      dockerfile: Dockerfile.api
     container_name: churn_api
     ports:
       - "8000:8000"
@@ -34,7 +34,7 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: Dockerfile.frontend
     ports:
       - "8501:8501"
     depends_on:

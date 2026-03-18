@@ -19,6 +19,8 @@ with st.form(key = "user_data"):
     submit = st.form_submit_button(label = "Submit")
 
 if submit:
-    url = url = "http://127.0.0.1:8000/predict"
-    response = requests.post(url, json = payload)
+    response = requests.post(
+        "http://api:8000/predict",
+        json=payload
+    )
     st.success(response.json())
