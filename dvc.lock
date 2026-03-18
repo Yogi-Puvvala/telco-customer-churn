@@ -1,0 +1,81 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/raw/telo_churn.csv
+      hash: md5
+      md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+      size: 977501
+    - path: src/preprocess.py
+      hash: md5
+      md5: 7180c3e02848ace9a601479b81237b76
+      size: 1479
+    outs:
+    - path: data/processed/X_test.pkl
+      hash: md5
+      md5: 14a3cd289bfc244f3997aa9fe0e513e2
+      size: 66076
+    - path: data/processed/X_train.pkl
+      hash: md5
+      md5: fa06998b26a91ed5ff54ba2247a3ae87
+      size: 260502
+    - path: data/processed/categorical_cols.pkl
+      hash: md5
+      md5: b72ba47c4dabf38ea04102b8f9301ef4
+      size: 319
+    - path: data/processed/numerical_cols.pkl
+      hash: md5
+      md5: dc6e04be33d40bd2748384ded78c45ff
+      size: 267
+    - path: data/processed/y_test.pkl
+      hash: md5
+      md5: f024d56cb0b7b085f007610a1bebb3b0
+      size: 34442
+    - path: data/processed/y_train.pkl
+      hash: md5
+      md5: 7acf87fbecffd948af5d2e863705938b
+      size: 135851
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed/X_train.pkl
+      hash: md5
+      md5: fa06998b26a91ed5ff54ba2247a3ae87
+      size: 260502
+    - path: data/processed/y_train.pkl
+      hash: md5
+      md5: 7acf87fbecffd948af5d2e863705938b
+      size: 135851
+    - path: src/train.py
+      hash: md5
+      md5: 6b4fd94617d34e9560c9ad6024be4f91
+      size: 4716
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+    - path: data/processed/X_test.pkl
+      hash: md5
+      md5: 14a3cd289bfc244f3997aa9fe0e513e2
+      size: 66076
+    - path: data/processed/y_test.pkl
+      hash: md5
+      md5: f024d56cb0b7b085f007610a1bebb3b0
+      size: 34442
+    - path: src/evaluate.py
+      hash: md5
+      md5: 54df98ac3b6e671627505ddba38b4471
+      size: 1907
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 006dc0aca0e6101b38e5a91ebb666268
+      size: 254403
+    - path: plots/confusion_matrix.png
+      hash: md5
+      md5: f8ec5fb25dea4852347429da9208255a
+      size: 17563
+    - path: plots/roc_curve.png
+      hash: md5
+      md5: 446325c11ef946eeb67a27197b7c5f43
+      size: 28822

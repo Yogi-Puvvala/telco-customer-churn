@@ -1,0 +1,34 @@
+import pandas as pd
+from src.predict import predict_value
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+class Data(BaseModel):
+    tenure: int
+    MonthlyCharges: float
+    TotalCharges: float
+    gender: str
+    SeniorCitizen: str
+    Partner: str
+    Dependents: str
+    InternetService: str
+    Contract: str
+    PaymentMethod: str
+
+app = FastAPI()
+
+@app.get("/")
+def sayHie():
+    return {"message": "Hie Yogi"}
+
+@app.post("/predict")
+def predict(user_data: Data):
+
+    df = pd.DataFrame([user_data.model_dump()])
+
+    prediction = predict_value(df)
+
+    res = "YES" if int(prediction[0]) == 1 else "NO"
+
+    return {"Predicted Value": res}

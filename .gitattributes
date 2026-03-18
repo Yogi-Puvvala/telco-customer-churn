@@ -1,0 +1,8 @@
+# Auto normalize
+* text=auto
+
+# Force LF for Python (recommended)
+*.py text eol=lf
+
+# Keep Windows scripts CRLF
+*.bat text eol=crlf

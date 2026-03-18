@@ -1,0 +1,5 @@
+[core]
+    remote = localstore
+    autostage = true
+['remote "localstore"']
+    url = D:\Github\my_environment\telco-customer-churn\dvc_storage

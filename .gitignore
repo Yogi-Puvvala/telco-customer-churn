@@ -205,3 +205,31 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# MLflow
+mlruns/
+mlflow.db
+
+# Data (handled by DVC)
+data/
+
+# Plots / outputs
+plots/
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Frontend (if exists)
+frontend/node_modules/
+frontend/build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+#
+dvc_plots/
+dvc_storage/
+models/

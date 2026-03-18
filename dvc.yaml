@@ -1,0 +1,31 @@
+stages:
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+      - data/raw/telo_churn.csv
+      - src/preprocess.py
+    outs:
+      - data/processed/X_train.pkl
+      - data/processed/X_test.pkl
+      - data/processed/y_train.pkl
+      - data/processed/y_test.pkl
+      - data/processed/numerical_cols.pkl
+      - data/processed/categorical_cols.pkl
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - data/processed/X_train.pkl
+      - data/processed/y_train.pkl
+      - src/train.py
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - data/processed/X_test.pkl
+      - data/processed/y_test.pkl
+      - src/evaluate.py
+    outs:
+      - models/model.pkl
+      - plots/confusion_matrix.png
+      - plots/roc_curve.png
