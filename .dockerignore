@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+mlruns/
+mlartifacts/
+data/
+plots/
+models/
+
+.git
+.gitignore

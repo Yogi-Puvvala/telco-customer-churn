@@ -118,8 +118,11 @@ print("Testing Score(XGB):", xgb.score(X_test, y_test))
 # ==============================
 
 import mlflow
+import os
 
-mlflow.set_tracking_uri("http://127.0.0.1:5000/")
+mlflow.set_tracking_uri(
+    os.getenv("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000")
+)
 mlflow.set_experiment("TELCOM-Customer-Churn")
 
 with mlflow.start_run(run_name = "Logistic-Regression"):
