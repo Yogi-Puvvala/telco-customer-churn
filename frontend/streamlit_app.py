@@ -24,4 +24,7 @@ if submit:
     API_URL = os.getenv("API_URL", "http://api:8000")
 
     response = requests.post(f"{API_URL}/predict", json=payload)
-    st.success(response.json())
+    if response.status_code == 200:
+        st.success(response.json())
+    else:
+        st.error(f"Error {response.status_code}: {response.text}")
