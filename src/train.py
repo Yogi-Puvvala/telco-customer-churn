@@ -19,9 +19,7 @@ with open("data/processed/numerical_cols.pkl", "rb") as f:
 with open("data/processed/categorical_cols.pkl", "rb") as f:
     categorical_cols = pickle.load(f)
 
-# =====================
 # Logistic Regression
-# =====================
 
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -60,9 +58,7 @@ print("Training Score(LR):", lr.score(X_train, y_train))
 print("Testing Score(LR):", lr.score(X_test, y_test))
 
 
-# =====================
 # Decision Tree
-# =====================
 
 num_pipeline_tree = Pipeline([
     ("imputer", SimpleImputer(strategy="median"))
@@ -94,9 +90,7 @@ print("Training Score(DT):", dt.score(X_train, y_train))
 print("Testing Score(DT):", dt.score(X_test, y_test))
 
 
-# =====================
 # XGBoost
-# =====================
 
 xgb = Pipeline([
     ("preprocessing", dt_preprocessor),
@@ -113,9 +107,7 @@ print("Training Score(XGB):", xgb.score(X_train, y_train))
 print("Testing Score(XGB):", xgb.score(X_test, y_test))
 
 
-# ==============================
 # Experiment Tracking
-# ==============================
 
 import mlflow
 import os

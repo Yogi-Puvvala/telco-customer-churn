@@ -5,115 +5,105 @@ import streamlit as st
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 st.set_page_config(
-    page_title = "Telco Customer Churn",
-    page_icon  = "T",
+    page_title = "Telco Customer Churn Predictor",
     layout     = "centered"
 )
 
-# Custom CSS 
-st.markdown("""
-<style>
-    .block-container { padding-top: 2rem; max-width: 700px; }
-    .section-label {
-        font-size: 11px;
-        font-weight: 500;
-        color: gray;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 8px;
-    }
-    .stButton > button {
-        width: 100%;
-        padding: 10px;
-        font-size: 14px;
-    }
-</style>
-""", unsafe_allow_html=True)
+st.title("Telco Customer Churn Predictor")
+st.caption("Fill in the customer details to predict whether they will churn.")
 
-# Header 
-st.markdown("## Telco Customer Churn")
-st.markdown(
-    "<p style='color:gray; font-size:14px; margin-top:-10px;'>"
-    "Fill in the customer details below to predict churn likelihood."
-    "</p>",
-    unsafe_allow_html=True
+st.divider()
+
+# Section 1: Usage Details 
+st.subheader("Usage Details")
+col1, col2, col3 = st.columns(3)
+
+tenure = col1.number_input(
+    "Tenure (months)",
+    min_value = 0,
+    step      = 1
+)
+monthly_charges = col2.number_input(
+    "Monthly Charges ($)",
+    min_value = 0.0,
+    step      = 0.01,
+    format    = "%.2f"
+)
+total_charges = col3.number_input(
+    "Total Charges ($)",
+    min_value = 0.0,
+    step      = 0.01,
+    format    = "%.2f"
 )
 
 st.divider()
 
-payload = {}
+# Section 2: Customer Profile 
+st.subheader("Customer Profile")
+col1, col2, col3, col4 = st.columns(4)
 
-with st.form(key="user_data"):
+gender = col1.selectbox(
+    "Gender",
+    ["Male", "Female"]
+)
+senior_raw = col2.selectbox(
+    "Senior Citizen",
+    ["No", "Yes"]
+)
+partner = col3.selectbox(
+    "Partner",
+    ["Yes", "No"]
+)
+dependents = col4.selectbox(
+    "Dependents",
+    ["Yes", "No"]
+)
 
-    # Usage Details 
-    with st.container(border=True):
-        st.markdown(
-            "<p class='section-label'>Usage details</p>",
-            unsafe_allow_html=True
-        )
-        c1, c2, c3 = st.columns(3)
-        payload["tenure"] = c1.number_input(
-            "Tenure (months)", min_value=0
-        )
-        payload["MonthlyCharges"] = c2.number_input(
-            "Monthly charges ($)", min_value=0
-        )
-        payload["TotalCharges"] = c3.number_input(
-            "Total charges ($)", min_value=0
-        )
+st.divider()
 
-    # Customer Profile 
-    with st.container(border=True):
-        st.markdown(
-            "<p class='section-label'>Customer profile</p>",
-            unsafe_allow_html=True
-        )
-        c1, c2 = st.columns(2)
-        payload["gender"] = c1.selectbox(
-            "Gender", ["Male", "Female"]
-        )
-        payload["SeniorCitizen"] = "1" if c2.selectbox(
-            "Senior citizen", ["No", "Yes"]
-        ) == "Yes" else "0"
+# Section 3: Service Details 
+st.subheader("Service Details")
+col1, col2, col3 = st.columns(3)
 
-        c3, c4 = st.columns(2)
-        payload["Partner"] = c3.selectbox(
-            "Partner", ["Yes", "No"]
-        )
-        payload["Dependents"] = c4.selectbox(
-            "Dependents", ["Yes", "No"]
-        )
+internet_service = col1.selectbox(
+    "Internet Service",
+    ["Fiber optic", "DSL", "No"]
+)
+contract = col2.selectbox(
+    "Contract",
+    ["Month-to-month", "One year", "Two year"]
+)
+payment_method = col3.selectbox(
+    "Payment Method",
+    [
+        "Electronic check",
+        "Mailed check",
+        "Bank transfer (automatic)",
+        "Credit card (automatic)"
+    ]
+)
 
-    # Service Details 
-    with st.container(border=True):
-        st.markdown(
-            "<p class='section-label'>Service details</p>",
-            unsafe_allow_html=True
-        )
-        c1, c2, c3 = st.columns(3)
-        payload["InternetService"] = c1.selectbox(
-            "Internet service",
-            ["Fiber optic", "DSL", "No"]
-        )
-        payload["Contract"] = c2.selectbox(
-            "Contract",
-            ["Month-to-month", "One year", "Two year"]
-        )
-        payload["PaymentMethod"] = c3.selectbox(
-            "Payment method",
-            [
-                "Electronic check",
-                "Mailed check",
-                "Bank transfer (automatic)",
-                "Credit card (automatic)"
-            ]
-        )
+st.divider()
 
-    submit = st.form_submit_button("Predict churn")
+# Predict Button 
+predict_btn = st.button("Predict Churn", use_container_width=True)
 
-# Result
-if submit:
-    with st.spinner("Analyzing..."):
+# Result 
+if predict_btn:
+    payload = {
+        "tenure"         : int(tenure),
+        "MonthlyCharges" : float(monthly_charges),
+        "TotalCharges"   : float(total_charges),
+        "gender"         : gender,
+        "SeniorCitizen"  : "1" if senior_raw == "Yes" else "0",
+        "Partner"        : partner,
+        "Dependents"     : dependents,
+        "InternetService": internet_service,
+        "Contract"       : contract,
+        "PaymentMethod"  : payment_method
+    }
+
+    with st.spinner("Predicting..."):
         try:
             response = requests.post(
                 f"{API_URL}/predict",
@@ -121,40 +111,34 @@ if submit:
             )
 
             if response.status_code == 200:
-                result = response.json()
+                result           = response.json()
+                prediction       = result.get("Predicted Value",  "Unknown")
+                confidence_score = result.get("Confidence Score", 0.0)
 
                 st.divider()
-                st.markdown(
-                    "<p class='section-label'>Result</p>",
-                    unsafe_allow_html=True
+                st.subheader("Prediction Result")
+
+                col1, col2, col3 = st.columns(3)
+                col1.metric(label="Churn Prediction", value=prediction)
+                col2.metric(label="Confidence Score", value=f"{confidence_score}%")
+                col3.metric(
+                    label="Risk Level",
+                    value="High" if confidence_score >= 70
+                        else "Medium" if confidence_score >= 40
+                        else "Low"
                 )
 
-                prediction = result.get("Prediction", "Unknown")
-                confidence = result.get("Confidence_Score", 0.0)
+                st.progress(min(max(int(confidence_score), 0), 100))
 
-                # Metric cards
-                c1, c2 = st.columns(2)
-                c1.metric("Prediction", prediction)
-                c2.metric("Confidence", f"{confidence}%")
-
-                # Confidence bar + message
-                with st.container(border=True):
-                    st.progress(min(max(int(confidence), 0), 100))
-
-                    if prediction == "Yes":
-                        st.error(
-                            "This customer is likely to churn. "
-                            "Consider offering a retention plan."
-                        )
-                    else:
-                        st.success(
-                            "This customer is unlikely to churn."
-                        )
-
-            else:
-                st.error(
-                    f"API Error {response.status_code}: {response.text}"
-                )
+                if prediction == "YES":
+                    st.error(
+                        "This customer is likely to churn. "
+                        "Consider offering a retention plan."
+                    )
+                else:
+                    st.success(
+                        "This customer is unlikely to churn."
+                    )
 
         except Exception as e:
             st.error(f"Connection error: {e}")
