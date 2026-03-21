@@ -2,7 +2,7 @@
 
 A production-ready machine learning project that predicts customer churn for a telecom company. The project covers the full ML lifecycle — from raw data to a deployed web application — using a proper MLOps stack with experiment tracking, data versioning, and containerized deployment.
 
-**Live App:** https://churn-frontend-ejth.onrender.com
+**Live App:** https://telco-customer-churn-frontend.onrender.com/
 
 ---
 
