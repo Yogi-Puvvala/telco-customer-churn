@@ -8,7 +8,6 @@ mlruns/
 mlartifacts/
 data/
 plots/
-models/
 
 .git
 .gitignore
